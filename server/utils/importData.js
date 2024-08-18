@@ -2,8 +2,11 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
 import { Book, Quote } from '../models/models.js';
+import dotenv from 'dotenv';
 
-const MONGO_URI = 'mongodb://root:root@192.168.1.19:27017/iReadBase?authSource=admin';
+dotenv.config();
+
+const MONGO_URI = process.env.MONGO_URL;
 
 async function connectDB() {
     await mongoose.connect(MONGO_URI, {

@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const connectDB = async () => {
     try {
-        const mongoURI = 'mongodb://root:root@192.168.1.19:27017/iReadBase?authSource=admin';
+        const mongoURI = process.env.MONGO_URL;
         await mongoose.connect(mongoURI, {
             connectTimeoutMS: 10000,
         });

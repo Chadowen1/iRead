@@ -4,26 +4,31 @@ import axios from 'axios';
 
 const router = express.Router();
 
-// Google Custom Search API details
-const GOOGLE_API_KEY = 'AIzaSyBr9s0-d3icQey8soSNX_ugE2LolpeQt-s';
-const CX = '65d1d1b276f964ecf';
-
 // Helper function to fetch an image based on the author name
 async function fetchAuthorImage(author) {
     try {
         const authorName = author.split(',')[0].trim();
-
-        const response = await axios.get(`https://www.googleapis.com/customsearch/v1`, {
-            params: {
-                q: authorName,
-                cx: CX,
-                searchType: 'image',
-                key: GOOGLE_API_KEY,
-                num: 1
-            }
+        const response = await axios.get(`https://openlibrary.org/search/authors.json`, {
+            params: { q: authorName }
         });
 
-        return response.data.items[0]?.link || './Unknown_person.jpg';
+        // Check if an author was found
+        if (response.data.docs && response.data.docs.length > 0) {
+            const authorData = response.data.docs[0];
+            const authorKey = authorData.key;
+
+            // Fetch the author details, including the image
+            const authorDetails = await axios.get(`https://openlibrary.org${authorKey}.json`);
+
+            // Open Library often stores the image in the "photos" array; use the first available image
+            const imageId = authorDetails.data.photos?.[0];
+            if (imageId) {
+                return `https://covers.openlibrary.org/b/id/${imageId}-L.jpg`; // 'L' is for a large image size
+            }
+        }
+
+        // Return a default image if no image is found
+        return './Unknown_person.jpg';
     } catch (error) {
         console.error('Error fetching author image:', error);
         return './Unknown_person.jpg';
