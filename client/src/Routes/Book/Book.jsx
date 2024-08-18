@@ -285,7 +285,9 @@ export default function Book() {
                                                         <Typography variant="body2" color="gray">{authorInfo.workCount} books</Typography>
                                                     </Stack>
                                                 </Stack>
-                                                <Typography variant="body1">{authorInfo.bio}</Typography>
+                                                <Typography variant="body1">
+                                                    {authorInfo.bio?.value}
+                                                </Typography>
                                                 <Link href={authorInfo.officialSite} variant="body2" color="primary">
                                                     Author's Website
                                                 </Link>
