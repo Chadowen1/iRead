@@ -81,10 +81,33 @@ if /i "%setupType%"=="L" (
         )
     )
     echo Docker is installed.
+
+    :: Run Docker Compose to start the database
+    echo Starting Docker containers...
+    docker-compose up -d
 ) else (
     echo Invalid option. Exiting.
     exit /b
 )
+
+:: Run yarn install in the root directory
+echo Running yarn install in the root directory...
+yarn install
+
+:: Navigate to the client directory and run yarn install
+cd client
+echo Running yarn install in the client directory...
+yarn install
+
+:: Navigate to the server directory and run yarn install
+cd ../server
+echo Running yarn install in the server directory...
+yarn install
+
+:: Return to the root directory and start the development server
+cd ..
+echo Starting the development server...
+yarn dev
 
 echo Setup completed successfully.
 
